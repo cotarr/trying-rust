@@ -1,7 +1,7 @@
 # trying-rust
 
 With a couple friends on IRC, we decided to try some coding in rust.
-We are using the online book "The Rust Programming language" online
+We are using the online book "The Rust Programming language" available
 at https://doc.rust-lang.org/book/title-page.html. I ordered the paperback book.
 
 My first notes are a little detailed, because I am trying to familiarize
@@ -10,7 +10,7 @@ myself with the vocabulary used to describe the build process and rust language.
 ## Setup
 
 - Setup VM with Debian 12
-- Installed rust `rustup`
+- Installed rust using `rustup` install script.
 
 ```bash
 curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
@@ -18,7 +18,7 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 
 - Installed vscode extension "rust-analyzer"
 - Created an empty git repository (this repo) and cloned it.
-- Created .gitignore with "*target*" to avoid commit binary executable files`
+- Created .gitignore with "\*target\*" to avoid commit binary executable files`
 - Begin at Chapter 1 section 1.1
 
 ## 1.1 Hello World
@@ -26,28 +26,28 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 - Created folder 1.1-hello-world and copy main.rs from book
 - The `fn main() {` defines main function as entry point to program
 - Rust style is indent 4 spaces (not tab)
-- The `println!` the exclamation point calls a macro (without ! would be function)
+- With `println!` the exclamation point calls a macro (without ! would be function)
 - Most rust expressions end in semi-colon `;`
 - Compile stand alone binary executable with `rustc main.rs`
 - Run with `./main` to produces: "Hello, World!"
-- Added "main" (binary) to .gitignore, since not in target folder
+- Added "main" (binary) to .gitignore, since not in a /target/ folder
 
 ## 1.2 Cargo
 
 - Cargo is Rust’s build system and package manager
 - New project with `cargo new hello_cargo`
 - Rename folder "1.2-hello_cargo" to sort folders in order
-- Created Cargo.toml and src folder
-- Unless parent folder is a git repository, initialized a new Git repository
+- Cargo automatically created Cargo.toml and src folder with hello world template.
+- Unless parent folder is a git repository, cargo will initialize a new Git repository
 - Get help with `cargo new --help`
-- toml (Tom’s Obvious, Minimal Language) is cargo configuration
+- Cargo.toml (Tom’s Obvious, Minimal Language) is cargo configuration
 - Cargo has generated a “Hello, world!” program for you,
 - Build dev version with `cargo build`
-- Run with `./target/debug/hello_cargo` produced "Hello, World!"
+- Binary at `./target/debug/hello_cargo` will produce "Hello, World!"
 - Build and run with `cargo run`
 - Check syntax with `cargo check`
 - Help with `cargo build --help`
-- Build man pages with `cargo help build`
+- View build man pages with `cargo help build`
 - Build release with `cargo build --release`
 
 ## 2.0 Guessing Game
@@ -56,7 +56,7 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 - Copy Listing 2-1 to main.rs
 - Use io (input/output) library from standard library `use std::io;`
 - Curly braces for code block `fn main() {`
-- The `fn` declares a new function without any parameters inside `( )` parenthesis
+- The `fn` keyword declares a new function without any parameters inside `( )` parenthesis
 
 ### variable
 
@@ -66,7 +66,7 @@ let mut guess = String::new();
 
 - In Rust, variables are immutable by default `let apples = 5; // immutable (constant)`
 - New mutable variable `let mut guess =` with equals symbol to bind it to something
-- `String:new()` is function that returns new instance of string, String type, growable, UTF-8.
+- `String::new()` is function that returns new instance of string, String type, growable, UTF-8.
 - The `::` indicates that new is an associated function of the String type
 - This has created a mutable variable that is currently bound to a new empty instance of a String.
 
@@ -110,12 +110,12 @@ let y = 10;
 println!("x = {x} and y + 2 = {}", y + 2);
 ```
 
-- Testing: requests input, prints value entered so far.
+- Testing: As expected, requests input, prints value entered so far.
 
 ### Add dependency from Rust Crate Repository
 
 - To get random number generator, need a library
-- A crate is a collection of Rust source code files
+- A "crate" is a collection of Rust source code files
 - In Cargo.toml file, add "rand" crate as a dependency
 - Value "0.8.5" is actually shorthand for "^0.8.5", which means any version that is at least 0.8.5 but below 0.9.0.
 
