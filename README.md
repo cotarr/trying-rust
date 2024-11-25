@@ -21,6 +21,11 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 - Created .gitignore with "\*target\*" to avoid commit binary executable files`
 - Begin at Chapter 1 section 1.1
 
+## Some conventions
+
+- Constants are upper case with underscores
+- Unused variable can start with underscore to avoid unused variable error
+
 ## 1.1 Hello World
 
 - Created folder 1.1-hello-world and copy main.rs from book
@@ -237,4 +242,139 @@ const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
 - Each "let" declares a new variable with a new type
 - Changing value of mutable variable constrains type else, compiler error
 - Shadowing (re-declare) mutable variable (re-declare) no compiler error
+
+## Chapter 3.2 - Data Types
+
+- Every value in Rust is of a certain "data type"
+- Two data type subsets: "scalar" and "compound"
+- Rust is a statically typed language (all types known at compile time)
+
+### Integer types
+
+```text
+Length     Signed    Unsigned
+8-bit      i8        u8
+16-bit     i16       u16
+32-bit     i32       u32
+64-bit     i64       u64
+128-bit    i128      u128
+arch       isize    usize (architecture of local machine, i.e. 64 bit)
+```
+
+### Integer literals
+
+- Underscore ignored in integer literal, for visual separation
+
+```text
+Decimal      98_222          (underscore ignored, for visible separation)
+Hex          0xff
+Octal        0o77
+Binary       0b1111_0000
+Byte         b'A'            (u8 only)
+```
+
+### Integer overflow
+
+- Compiler includes checks for integer overflow
+- Runtime overflow causes "panic"
+- Release mode with the --release flag does not include checks
+
+### Floating Point Types
+
+- Rust’s floating-point types are f32 and f64
+- All floating-point types are signed
+- Floating point literal must have decimal point, else compiler considers as integer
+- The f32 type is a single-precision float, and f64 has double precision.
+
+### Boolean type
+
+- Type is "bool"
+- Allowed "true" or "false" in lower case syntax
+
+### Character Type
+
+- Type is "char"
+- Specify with single quotes
+- char type is four bytes (unicode scalar value)
+- Unicode Scalar Values range from U+0000 to U+D7FF and U+E000 to U+10FFFF
+
+### Tuple type
+
+- Type is "tuple"
+- Defined using parenthesis, comma separated values of different types
+- Assigned from tuple using parenthesis
+- Assigned from tuple using dot notation.
+
+```rs
+    let tup = (500, 6.4, 1);
+    let (x, y, z) = tup;
+    // Prints: 6.4
+    println!("The value of y is: {y}");
+    let m = tup.1;
+    // Prints: 6.4
+    println!("The value of m is: {m}");
+```
+
+### Array types
+
+- Type is "array"
+- Every element must have same type
+- Length of all arrays are fixed
+- Values are comma-separated list inside square brackets
+- A "vector" type is similar to array but can grow
+
+```rs
+    let a = [1, 2, 3, 4, 5];
+    // type and length declared
+    let b: [i32; 5] = [1, 2, 3, 4, 5];
+```
+
+- Initialize an array with same value for each element
+- Specifying the initial value, followed by a semicolon, and then the length
+
+```rs
+   let a = [3; 5];
+```
+
+- Compiler includes range analysis of literal assignment to index
+- Runtime panic if not production, and index exceeded.
+
+## Chapter 3.3 Functions
+
+- Function names use snake case for function and variable names (all letters lowercase with underscores)
+- Defined by "fn" keyboard followed by name, parenthesis and curly braces.
+- Functions definitions do nto end in simicolon
+- Call function using name followed by parenthesis
+- Optional parameters
+- Must declare the type of each parameter
+- Multiple parameters separated by commas
+
+```rs
+    fn print_labeled_measurement(value: i32, unit_label: char) {
+        println!("The measurement is: {value}{unit_label}");
+    } // no semicolon at end
+```
+
+### Statements and Expressions
+
+- Statements perform an action but do not return a value.
+- Unlike other languages, assignment statements do not return a value, error: `let y = let z = 4;`
+
+- Expressions evaluate to a resultant value
+- Calling a function, calling a macro are an expressions
+- A new scope block created with curly brackets is an expression
+
+- Functions can return values to the code that calls them
+- The body (code block) must end in an expression returning a value (the value to be returned)
+- Type must be declared using an arrow "->"
+- Return type must match declared function return value type
+
+```rs
+fn five() -> i32 {
+    // this is an expression, returning 5
+    5
+}
+```
+
+## 3.4 Comments
 
