@@ -378,3 +378,18 @@ fn five() -> i32 {
 
 ## 3.4 Comments
 
+- Comment line start with two slash "// "
+- Multi line comments, each line needs new //
+- Comments can be placed at the end of a line
+- Typically comment is on line preceding the referenced statement
+
+```rs
+// This is a multi-line comment
+// This is the second line
+
+// Explain statement
+let x = 4;
+
+let x = 4; // Explain statement
+``
+
