@@ -176,7 +176,7 @@ rand = "0.8.5"
 - The colon (:) after guess tells Rust we’ll annotate the variable’s type
 - The expect method is added for Err Result that is not a valid number, crash with message
 
-### Wrap in a loop
+    ### Wrap in a loop
 
 - Wrap code in a loop block to repeat user entry to allow multiple successive guesses
 
@@ -211,4 +211,30 @@ rand = "0.8.5"
 ```
 
 ## Chapter 3.1 Variables and Mutability
+
+- By default all variables are mutable
+
+```rs
+   let x = 5;
+```
+
+- Add "mut" keyword to make variable mutable
+
+```rs
+    let mut w = 5;
+```
+
+- Constants are values that are bound to a name and are not allowed to change
+- Type of the value must be annotated
+- Constants can be declared in any scope, including the global scope
+- Convention: s upper case with underscores
+
+```rs
+const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
+```
+
+- "Shadowing" is re-declaring a previously declared variable
+- Each "let" declares a new variable with a new type
+- Changing value of mutable variable constrains type else, compiler error
+- Shadowing (re-declare) mutable variable (re-declare) no compiler error
 
