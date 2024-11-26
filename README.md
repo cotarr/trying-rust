@@ -391,5 +391,96 @@ fn five() -> i32 {
 let x = 4;
 
 let x = 4; // Explain statement
-``
+```
+
+## 3.5 Control Flow
+
+### if statements
+
+- Start with keyword "if" followed by a condition
+- Blocks of code associated sometimes called "arms"
+- Optional "else" statement
+- The condition must be a boolean
+- Will not do automatic type conversion to boolean
+- Keyword "else if" check for subsequent conditions,  if .. else if ... else
+
+- if is an expression, so it returns a value
+- Blocks of code evaluate to last expression in block
+
+```rs
+    let condition = true;
+    let number = if condition { 5 } else { 6 };
+    println!("The value of number is: {number}");
+```
+
+- all branches of if statement must return same type, following is error
+
+```rs
+    let number = if condition { 5 } else { "six" };
+```
+
+### loop
+
+- The "loop" keyword repeats code block
+- The "break" keyword exits loop
+- break expression returned as value `break 12;`
+- The "continue" keyword, stops execution and starts a new loop
+- Also "return" exits loop and also exits loop and function
+
+### nested loops
+
+- With nested loops, break and continue apply to the innermost loop
+- loop label for multiple loops, determine which loop will break or continue
+
+```rs
+    // some code omitted
+    // loop label
+    'counting_up: loop {
+        loop {
+            if count == 1 {
+                break;
+            }
+            if count == 2 {
+                // break specifies label
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+        count += 1;
+    }
+```
+
+### while
+
+- The "while" keyword followed by condition followed by code block
+- While the condition is true the loop runs
+- When condition ceases to be true, the program calls break
+
+```rs
+    let mut number = 3;
+    while number != 0 {
+        number -= 1;
+        // do something
+    }
+```
+
+### for
+
+- The for loops are the most commonly used loop construct in Rust
+
+```rs
+    let a = [10, 20, 30, 40, 50];
+    for element in a {
+        println!("the value is: {element}");
+    }
+```
+
+- The "range" keyword generates all numbers in sequence starting from one number,ending another
+- The "rev" keyword reverses the order
+
+```rs
+    for number in (1..4).rev() {
+        // do something
+    }
+```
 
