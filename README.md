@@ -753,3 +753,14 @@ fn main() {
 - Examples used &String so each instance own's all it's values
 - Structs can store references that are not owned, but this requires "lifetime" covered later in book
 
+## 5.2 Example program (struct)
+
+Multi-variations of example program to calculate area of rectangle (see 5.2 code)
+
+- Example using integer variables as parameters
+- Example using tuple as parameters
+- Example using struct as parameters
+- Example pretty print using println!() macro and debug
+- Example pretty print using deg!() macro
+- Note: Calling dbg! sends to stderr, println! to stdout.
+
