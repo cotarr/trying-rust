@@ -700,8 +700,7 @@ struct User {
 - Create an instance of the struct containing key: value pairs
 - Use dot notation to access a value
 - Use field "init shorthand syntax" to refer to variable of same name as key (see 5.1 code)
-- Using = like an assignment, value moved to user2, it's a "move" not "copy", can no longer use user1 after user3 
-
+- Using = like an assignment, value moved to user2, it's a "move" not "copy", can no longer use user1 after user3
 
 ```rs
     // user 1 instance already defined (see 5.1 code section better example)
@@ -764,3 +763,64 @@ Multi-variations of example program to calculate area of rectangle (see 5.2 code
 - Example pretty print using deg!() macro
 - Note: Calling dbg! sends to stderr, println! to stdout.
 
+## 5.3 Method syntax
+
+- "Methods" are similar to functions
+- Methods are defined in an "impl" implementation block, must be same name as related struct
+- Declare using "fn" keyword and a name
+- Can have parameters
+- Parameter &self (short for "self: &Self), where Self is alias for type that is implementation block (parent)
+- Can have return values, type specified by arrow syntax "->" like function
+- Method called using "method syntax" which is dot notation on instance of it's parent struct
+- Can have multiple methods in an implementation block
+- Can have multiple implementation blocks (same as multiple in one block)
+- Uses automatic referencing `p1.distance(&p2);` same as `(&p1).distance(&p2);` so, "p1." is an automatic reference
+
+```rs
+    struct Rectangle {
+        width: u32,
+        height: u32,
+    }
+    // Declare the method
+    impl Rectangle {
+        fn area(&self) -> u32 {
+            self.width * self.height
+        }
+    }
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+    // Do somethings with the method rect1.area()
+    let theArea = rect1.area();
+```
+
+### Associated functions
+
+- Defined in implementation block like method
+- As opposed to method, the function's parameter not one of parent struct key: value pairs
+- Function is namespaced on the struct using "::" double colin notation
+- This is like previous example: `String::from("hello");
+
+```rs
+    // Associated function square takes integer value as side of a square returns a Rectangle object
+    fn square(size: u32) -> Self {
+        // Self is type Rectangle
+        // Return a type Rectangle
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+    let side = 10;
+    let rect1 = Rectangle::square(side);
+    // Do somethings with the method rect1.area()
+    let theArea = rect1.area();
+```
+
+Compare, "." and "::"
+
+```rs
+    let theArea = rect1.area();          // Struct method
+    let rect1 = Rectangle::square(side); // Struct associated function
+```
