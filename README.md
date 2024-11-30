@@ -181,7 +181,7 @@ rand = "0.8.5"
 - The colon (:) after guess tells Rust we’ll annotate the variable’s type
 - The expect method is added for Err Result that is not a valid number, crash with message
 
-    ### Wrap in a loop
+### Wrap in a loop
 
 - Wrap code in a loop block to repeat user entry to allow multiple successive guesses
 
@@ -372,6 +372,7 @@ Byte         b'A'            (u8 only)
 ```rs
 fn five() -> i32 {
     // this is an expression, returning 5
+    // note: no semicolon after 5
     5
 }
 ```
@@ -484,3 +485,199 @@ let x = 4; // Explain statement
     }
 ```
 
+## 4.1 Ownership
+
+Traditionally programs either allocate memory manually or dynamically manage with garbage collection.
+
+Rust uses new concept called "Ownership"
+
+- Under the hood
+  - Stack stores values in order (push), removes in the opposite order (pop)
+  - Heap, allocating returns a pointer and fixed size, must be deallocated after use
+
+- In Rust, variable has "ownership" over variables memory until dropped.
+- Passing variable to a function as argument drops original variable, since now function has ownership.
+
+### Ownership Rules
+
+- Each value in Rust has an owner.
+- There can only be one owner at a time.
+- When the owner goes out of scope, the value will be dropped.
+
+- Scope: A variable is valid from the point at which it’s declared until the end of the current scope.
+
+- Compare ownership to string literal, stored internal to code, literals are immutable
+
+```rs
+    let s = "hello";
+```
+
+- Consider `let s = String::from("hello");`
+- The "::" operator allows us to namespace this particular from function under the String type
+- The "from" function converts string literal to type "String"
+- Calling `String::from` requests the memory to be allocated.
+- Under the hood the String will use a pointer, size, available size.
+- The variables's memory is automatically returned once the variable that owns it goes out of scope.
+- Memory is freed using internal "drop" function so garbage collection is not needed.
+
+```rs
+    // memory allocated
+    let s = String::from("hello");
+    
+    // the s variable as argument to function is dropped from current scope, added to println scope
+    // When printls! is done, it goes out of scope, is dropped.
+    println!("{s}");
+```
+
+### Copy and Move
+
+Simple values with a known, fixed size, are pushed onto the stack.
+
+- Value 5 is bound to x
+- Current value of x is 5, the value 5 (from x) is bound to variable y
+- Both x an y have value 5 (separate variables)
+- Rust compiler reserves space on the stack for x and y (simple fixed size variables)
+
+```rs
+    let x = 5;
+    let y = x;
+```
+
+- Types capable of simple copy (those stored on stack)
+  - Integer types (all), such as u32.
+  - The Boolean type, bool
+  - Floating-point types, such as f64.
+  - The character type, char.
+  - Tuples, with only simple fixed size type like (i32, i32), but not (i32, String).
+
+Complex data structures of variable size can not be copied like previous using stack. Complex variables need to use allocated memory from heap. This is managed internally by rust.
+
+- Attempting to copy complex data generate compiler error
+
+```rs
+    let s1 = String::from("hello");
+    // s1 goes out of scope, no longer available to use
+    let s2 = s1;
+    // Do something with s2, but s1 is out of scope, doing something with s2 generates error
+```
+
+Example returning original value in tuple along side result value
+
+- Passing variable to function, variable goes out of scope, drops variable's allocated memory
+- Original value returned in a tuple so it can continue to be used in the program after subroutine used it
+- (See first example next section for alternate way)
+
+```rs
+    let s1 = String::from("hello");
+    // passing s1 to function drops s1 ownership
+    let (s2, len) = calculate_length(s1);
+    // So s2 must be returned as tuple value because it's value is still needed by program
+    println!("The length of '{s2}' is {len}.");
+
+    fn calculate_length(s: String) -> (String, usize) {
+        let length = s.len(); // len() returns the length of a String
+        // a tuple is returned containing both values
+        (s, length)
+    }
+```
+
+## 4.2 References and Borrowing
+
+- A "reference" is like a pointer that can be followed to access the data (owned by other variable) stored at that address.
+- A reference is guaranteed to point to a valid value of a particular type for the life of that reference.
+- Function signature "&" represents  a reference. The "*" is dereference (discussed later)
+
+```rs
+    // &s1 refers to S1, but does not own it.
+    let s1 = String::from("hello");
+    // s1 will not be dropped when used by function
+    let len = calculate_length(&s1);
+
+    // Accepts a reference of type String, returning value of type usize.
+    fn calculate_length(s: &String) -> usize {
+       s.len() // len() returns the length of a String
+    }
+```
+
+- Creating a reference is called "borrowing"
+- References are immutable by default, and changing is compiler error.
+
+### Mutable references
+
+- A mutable variable may have one (and only one) mutable reference
+- Mutable reference defined by "&mut" in front of parameter variable
+- In `(&mut s)` no type is listed, using type of parent
+- The mutable borrow exists until it is used in a function
+
+- More than one reference will be an error.
+- Simultaneous mutable and immutable reference is error
+- Borrow mutable reference prevents race conditions
+- References prevent dangling references
+
+```rs
+    let mut s = String::from("hello");
+    change(&mut s);
+
+    fn change(some_string: &mut String) {
+        some_string.push_str(", world");
+    }
+```
+
+(see 4.2 example)
+
+### Rules
+
+- At any given time, you can have either one mutable reference or any number of immutable references.
+- References must always be valid.
+
+## 4.3 Slice Type
+
+- Slices let you reference a contiguous sequence of elements in a collection (subset of items).
+- Slices do not have ownership
+- It is a type of reference
+
+### String slices
+
+Rust’s .. range syntax to return slices
+
+```rs
+let s = String::from("hello");
+let len = s.len();
+
+// Omit starting value assumes first character
+let slice = &s[0..2];
+let slice = &s[..2];
+
+// Omit ending value assumes last character
+let slice = &s[3..len];
+let slice = &s[3..];
+
+// These are equal to original string
+let slice = &s[0..len];
+let slice = &s[..];
+```
+
+- String slice from range syntax must occur at valid UTF-8 character boundaries
+- The compiler will ensure the references into the String remain valid
+- If the original string s becomes invalid, such as `s.clear()`, then the slice from it's reference is also invalid, an error
+
+### String slices as parameters
+
+- "&String" is reference to a type String
+- "&str" is a reference to a "string slice"
+- The syntax "&s[0..2];" returns type string slice (&str)
+- Rust considers string literals to be a slice
+- Both String and string literal can be function parameters using "&str" as parameter type.
+
+```rs
+fn first_word(s: &String) -> &str {
+// this accepts both
+fn first_word(s: &str)    -> &str {
+```
+
+### Array slice example
+
+```rs
+let a = [1, 2, 3, 4, 5];
+let slice = &a[1..3];
+```
