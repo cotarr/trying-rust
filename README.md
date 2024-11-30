@@ -681,3 +681,75 @@ fn first_word(s: &str)    -> &str {
 let a = [1, 2, 3, 4, 5];
 let slice = &a[1..3];
 ```
+
+## 5.1 Structs
+
+- Keyword "struct" defines a struct
+- Struct's name should be descriptive
+- Names of types inside struct called "fields"
+
+```rs
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+```
+
+- Create an instance of the struct containing key: value pairs
+- Use dot notation to access a value
+- Use field "init shorthand syntax" to refer to variable of same name as key (see 5.1 code)
+- Using = like an assignment, value moved to user2, it's a "move" not "copy", can no longer use user1 after user3 
+
+
+```rs
+    // user 1 instance already defined (see 5.1 code section better example)
+    user2 = User {
+        active: true,
+        user2.username, // dot notation
+        email,          // init shorthand syntax
+        sign_in_count: 1,
+    }
+```
+
+- Can use values from one instance to create a new instance
+- Use "struct update syntax" to copy boilerplate key:value that are not changed
+- The `..user2` must come last
+- Using = like an assignment, value moved to user3, it's a "move" not a "copy", can no longer use user2 after user3
+- Could have used scaler (on stack) mixed with creating new strings, then user2 would still be valid.
+
+```rs
+    let user3 = User {
+        email: String::from("another@example.com"),
+        ..user2 // struct update syntax
+    };
+```
+
+### tuple structs
+
+- Define with "struct" keyword followed by tuple containing types
+- Otherwise similar to structs
+
+```rs
+    struct Color(i32, i32, i32);
+    let black = Color(0, 0, 0);
+```
+
+### unit-like structs
+
+- Structs without any fields are "unit-like structs"
+- Useful to represent a trait (more in later chapters)
+
+```rs
+struct AlwaysEqual;
+fn main() {
+    let subject = AlwaysEqual;
+}
+```
+
+### struct ownership
+
+- Examples used &String so each instance own's all it's values
+- Structs can store references that are not owned, but this requires "lifetime" covered later in book
+
