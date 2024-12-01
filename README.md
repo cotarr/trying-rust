@@ -914,10 +914,103 @@ Compare, "." and "::"
     let some_char = Some('e');
 ```
 
-- In the case a variable does not have a valid value, the None variant is used. 
+- In the case a variable does not have a valid value, the None variant is used.
 - To use None, the Option enum must be explicitly annotated with a type
 - Format is `Option<T>` where T represents type
 
 ```rs
     let absent_number: Option<i32> = None;
+```
+
+## 6.2 Match control flow construct
+
+- Match is similar to a case statement that runs code if a pattern "fits"
+- Define with "match" keyword followed by an expression
+- Arms have two parts, a pattern, and some code.
+- The "=>" operator separates pattern from code.
+- Code is an expression
+- Trailing comma is optional
+- Evaluation stops after first match
+
+```rs
+    enum Coin {
+        Penny,
+        Nickel,
+    }
+    fn value_in_cents(coin: Coin) -> u8 {
+        match coin {
+            Coin::Penny => 1,
+            Coin::Nickel => 5,
+        }
+    }
+    println!("A Nickel is {} cents", value_in_cents(Coin::Nickel));
+    // Prints: A Nickel is 5 cents
+```
+
+- Example where arm both executes statement and returns value
+
+```rs
+    fn value_in_cents(coin: Coin) -> u8 {
+        match coin {
+            Coin::Penny => {
+                println!("Lucky penny!");
+                1
+            }
+            Coin::Nickel => 5,
+        }
+    }
+    println!("A Penny is {} cents, Penny prints message", value_in_cents(Coin::Penny));    
+    // Prints:
+    //     Lucky penny!
+    //     A Penny is 1 cents, Penny prints message
+```
+
+### Matching with `Option<T>`
+
+- Match using `Option<T>` for has or does not have a value
+- The Some variant matches data that has a value of any time
+- The None variant matches variable that does not have a value
+
+```rs
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+```
+
+### Catchall patterns
+
+- Case 1, a catchall variable passed to function
+
+```rs
+    let dice_roll = 9;
+    match dice_roll {
+        3 => add_fancy_hat(),
+        7 => remove_fancy_hat(),
+        other => move_player(other),
+    }
+```
+
+- Case 2, Underscore as match catchall pattern and run function
+
+```rs
+    let dice_roll2 = 9;
+    match dice_roll2 {
+        3 => add_fancy_hat2(),
+        7 => remove_fancy_hat2(),
+        // Match all if not 3 or 7, runs function
+        _ => reroll2(),
+    }
+```
+
+- Case 3, Underscore as match catchall pattern, do nothing ( ) using empty unit tuple
+
+```rs
+    let dice_roll3 = 9;
+    match dice_roll3 {
+        3 => add_fancy_hat3(),
+        7 => remove_fancy_hat3(),
+        // Use empty unit tuple, do nothing if not match 3 or 7
+        _ => (),
+    }
 ```
