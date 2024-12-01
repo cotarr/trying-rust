@@ -25,6 +25,8 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 
 - Constants are upper case with underscores
 - Unused variable can start with underscore to avoid unused variable error
+- comma separated items on different lines, last line can end in trailing comma.
+- statements end in semicolon except last statement of code block
 
 ## 1.1 Hello World
 
@@ -799,7 +801,7 @@ Multi-variations of example program to calculate area of rectangle (see 5.2 code
 
 - Defined in implementation block like method
 - As opposed to method, the function's parameter not one of parent struct key: value pairs
-- Function is namespaced on the struct using "::" double colin notation
+- Function is namespaced on the struct using "::" double colon notation
 - This is like previous example: `String::from("hello");
 
 ```rs
@@ -823,4 +825,99 @@ Compare, "." and "::"
 ```rs
     let theArea = rect1.area();          // Struct method
     let rect1 = Rectangle::square(side); // Struct associated function
+```
+
+## 6.1 Defining enum
+
+- Create enumeration using keyword "enum"
+- It's members are called the enum's "variants"
+- Variants represent all of the possible values, only one at a time can be used.
+- Variants of the enum are namespaced under its identifier "::" double colon
+
+```rs
+  enum IpAddrKind {
+        V4,
+        V6,
+    }
+    let four = IpAddrKind::V4;
+    let six = IpAddrKind::V6;
+```
+
+- Variants can be defined to accept data with define type
+- This automatically becomes a constructor function
+- IpAddr::V4() is a function call that takes a String argument and returns an instance of the IpAddr type
+
+```rs
+   enum IpAddr {
+        V4(String),
+        V6(String),
+    }
+    let home = IpAddr::V4(String::from("127.0.0.1"));
+    let loopback = IpAddr::V6(String::from("::1"));
+```
+
+- enum can group different types similar to a struct
+- struct keyword not needed because all the variants are grouped in enum
+
+```rs
+    // enum to replace several struct
+    //
+    // Quit - no data
+    // Move - named fields
+    // Write - String.
+    // ChangeColor - three i32 values.
+    //
+    enum Message {
+        Quit,
+        Move { x: i32, y: i32 },
+        Write(String),
+        ChangeColor(i32, i32, i32),
+    }
+    //
+    // Is equivalent to this:
+    //
+    struct QuitMessage; // unit struct
+    struct MoveMessage {
+        x: i32,
+        y: i32,
+    }
+    struct WriteMessage(String); // tuple struct
+    struct ChangeColorMessage(i32, i32, i32); // tuple struct
+```
+
+- Add implementation block to define enum methods
+
+```rs
+    impl Message {
+        fn call(&self) {
+            // method body would be defined here
+            println!("The enum method was called");
+        }
+    }
+    let m = Message::Write(String::from("hello"));
+    m.call()
+```
+
+### Option enum
+
+- The rust programming language does not include a null value
+- Therefore in rust, it is not necessary to check for null values before using a variable.
+- The standard library includes predefined "Option" enum, `Option<T>` where T is any type.
+- This is to differentiate between two states, variable has a valid value, and does not have a value.
+
+- For variable that has a valid value, the Option enum variant Some() is used
+- The value is held within the Some.
+- It is necessary to convert `Option<T>` to a `T` (to a known type) before using it
+
+```rs
+    let some_number = Some(5);
+    let some_char = Some('e');
+```
+
+- In the case a variable does not have a valid value, the None variant is used. 
+- To use None, the Option enum must be explicitly annotated with a type
+- Format is `Option<T>` where T represents type
+
+```rs
+    let absent_number: Option<i32> = None;
 ```
