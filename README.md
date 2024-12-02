@@ -1014,3 +1014,31 @@ Compare, "." and "::"
         _ => (),
     }
 ```
+
+## 6.3 if let syntax
+
+- `if let` is an alternate to `match`
+- if let takes a pattern and an expression separated by an equal sign.
+- benefit if-let: can be simpler and less code.
+- benefit match: exhaustive checking that match enforces
+
+Example using if-let:
+
+```rs
+    let mut count = 0;
+    if let Coin::Quarter(state) = coin {
+        println!("State quarter from {state:?}!");
+    } else {
+        count += 1;
+    }
+```
+
+Compare using match:
+
+```rs
+    let mut count = 0;
+    match coin {
+        Coin::Quarter(state) => println!("State quarter from {state:?}!"),
+        _ => count += 1,
+    }
+```
