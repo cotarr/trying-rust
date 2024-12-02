@@ -1042,3 +1042,20 @@ Compare using match:
         _ => count += 1,
     }
 ```
+
+## 7.1 Packages and Crates
+
+- A "crate" is the smallest amount of code
+- "Binary crates" compile to an executable, with "main" function
+- "Library crates" are not executable, do not have main function
+- Usually rust coders refer to a library as "crate", assume to be library
+- "Root crate" is starting compiler file
+
+- A "package" is a bundle of one or more crates
+- A package contains a "Cargo.toml" file
+
+- Running `cargo new my_project`
+  - Creates "Cargo.toml" file.
+  - Creates src/main.rs template (If library src/lib.rs)
+
+
