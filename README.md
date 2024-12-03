@@ -28,6 +28,16 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 - comma separated items on different lines, last line can end in trailing comma.
 - statements end in semicolon except last statement of code block
 
+## Supress warning
+
+When experimenting with code, the following directives can
+disable warnings to better focus on compiler error messages
+
+```
+#[allow(unused_variables)]
+#[allow(dead_code)]
+```
+
 ## 1.1 Hello World
 
 - Created folder 1.1-hello-world and copy main.rs from book
@@ -1057,5 +1067,84 @@ Compare using match:
 - Running `cargo new my_project`
   - Creates "Cargo.toml" file.
   - Creates src/main.rs template (If library src/lib.rs)
+
+## 7.2 Paths, Module Tree
+
+### Modules Cheat Sheet
+
+- Compiler starts from the crate root: src/main.rs or src/lib.rs
+- Declaring Modules:
+  - In the crate root file, `mod garden;`
+  - Inline, within curly brackets that replace the semicolon following mod garden
+  - In the file src/garden.rs
+  - In the file src/garden/mod.rs
+- Declaring submodules:
+  - Except crate root, declare submodules `mod vegetables;`
+  - Inline, directly following mod vegetables, within curly brackets instead of the semicolon
+  - In the file src/garden/vegetables.rs
+  - In the file src/garden/vegetables/mod.rs
+- Paths to code in modules
+  - A Asparagus type would be found at `crate::garden::vegetables::Asparagus.`
+- Private vs. public:
+  - Code in module is private from parent modules by default
+  - Make a module public, declare it with `pub mod`
+- The use keyword:
+  - `use crate::garden::vegetables::Asparagus;` refer to as `Asparagus`
+
+### Example module backyard
+
+Example showing code from multiple files (modules) used in one crate. See example code: 7.2-defining-modules/backyard
+
+- Namespace inside module private unless declared public, using "pub" in examples.
+- In src/main.rs `pub mod garden;` include src/garden.rs
+- In src/garden.rs `pub mod vegetables;` include src/garden/vegetables.rs
+- Note, folder src/garden/ the "garden" directory must be same name as garden.rs, else compile error
+- In src/garden/vegetables.rs `pub struct Asparagus {}` is some example data
+- In src/main.rs `use crate::garden::vegetables::Asparagus;` brings "Asparagus" into namespace
+- In src/main.rs, use the example data `let plant = Asparagus {};`
+- When run, the struct from the vegetables module is printed from main.rs
+
+### Example crate library restaurant
+
+Example showing creation of library create, See example code: 7.2-defining-modules/restaurant
+
+- Use the --lib to specify library crate `cargo new --lib restaurant`
+- Created library root file "src/lib.rs" with following auto-generated template
+
+```rs
+pub fn add(left: u64, right: u64) -> u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}
+```
+
+- Replaced src/lib.rs template code with code from book (abbreviated here)
+- Build with `cargo build`
+
+```rs
+// src/lib.rs (abbreviated)
+mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+    }
+    mod serving {
+        fn take_order() {}
+    }
+}
+```
+
+- Define module with the "mod" keyword followed by module name
+- Body of module goes in curly braces
+- Child modules can go inside parent modules
 
 
