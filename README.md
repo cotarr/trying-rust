@@ -33,7 +33,7 @@ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 When experimenting with code, the following directives can
 disable warnings to better focus on compiler error messages
 
-```
+```txt
 #[allow(unused_variables)]
 #[allow(dead_code)]
 ```
@@ -1147,4 +1147,104 @@ mod front_of_house {
 - Body of module goes in curly braces
 - Child modules can go inside parent modules
 
+## 7.3 Module Paths
 
+- Path identifiers are separated with double colon "::"
+- Preference is absolute paths in case code is moved to other locations
+- The module tree should be defined in src/lib.rs
+
+- Absolute path, full path starting from a crate root
+  - External crate, the absolute path begins with the crate name
+  - Current crate, it starts with the literal "crate"
+  - Example: `crate::front_of_house::hosting::add_to_waitlist();`
+
+- Relative path starts from the current module
+  - Uses "self:, "super", or an identifier in the current module
+  - Starting with a module name means that the path is relative
+  - Example: `front_of_house::hosting::add_to_waitlist();`
+
+- Parent module can’t use the private items inside child modules
+- Items in child modules can use the items in their ancestor modules
+- Putting "pub" in front of module
+
+Side note:
+
+Compiler errors can be explained with `runtc --explain`
+
+```txt
+Some errors have detailed explanations: E0433, E0603.
+For more information about an error, try `rustc --explain E0433`.
+```
+
+### Public Structs
+
+- A "pub" struct is public, but the struct's fields will be private
+- Each field in a struct is public or private on case by case basis
+- Public method in struct can modify private fields
+
+### Public Enums
+
+- All fields of a "pub" declared enum will be public
+
+## 7.4 use keyword
+
+- The "use" key specifies a path shortcut similar to filesystem
+- Add the "as" keyword to assign an alternate or descriptive name
+- use also checks privacy
+- use only creates the shortcut for the particular scope in which the use occurs
+- Although use can shortcut functions, it is discouraged,
+- "Idiomatic" path `module::function()` indicates which module contains the function definition
+- Sometimes struct methods have same name, need more path to differentiate
+- By default use names are private, to make public prepend pub like `pub use aaa::bbb`
+- To bring all times into scope use glob operator `use std::collections::*;`
+
+```rs
+use crate::front_of_house::hosting;
+mod customer {
+    pub fn eat_at_restaurant() {
+        hosting::add_to_waitlist();
+    }
+}
+```
+
+- Typical way of bringing struct or enum into scope (has evolved as convention)
+
+```rs
+use std::collections::HashMap;
+fn main() {
+    let mut map = HashMap::new();
+    map.insert(1, 2);
+}
+```
+
+- Providing new name to path
+
+```rs
+    use std::io::Result as IoResult;
+```
+
+### Using external packages
+
+
+- External packages added to Cargo.toml such as `rand = "0.8.5"`
+- The use keyword brings the external package definition into scope
+
+```rs
+use rand::Rng;
+fn main() {
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+}
+```
+
+- Standard library "std" does not need to be listed in Cargo.toml
+- Bring into scope the same `use std::collections::HashMap;`
+
+Nested paths example
+
+```rs
+// Long way
+use std::cmp::Ordering;
+use std::io;
+// Shorter way, cmp and io both from std
+use std::{cmp::Ordering, io};
+```
