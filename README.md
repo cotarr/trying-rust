@@ -1270,3 +1270,48 @@ See 7.5-different-files/src/ for example code
    src/module1.rs
    src/module1/module2.rs
 ```
+
+## 8.1 Vectors
+
+- Vectors can only store values of the same type.
+- The new function creates an empty vector
+- `Vec<T>` defines a vector where T is a generic type
+- Empty vector requires a type in definition because no items are specified
+- The macro `vec!` will determine type of initial values and create vector
+- Can use a for loop to get immutable references to each element
+- Can use a for loop with mutable vector alter mutable references
+- Ownership and borrowing is enforced
+- Using enum is a way to store different type, because all elements are type enum
+- A vector's memory is freed when it goes out of scope
+
+Example vector
+
+```rs
+let v: Vec<i32> = Vec::new();
+let v = vec![1, 2, 3];
+
+let mut v = Vec::new();
+v.push(5);
+```
+
+- First way: Access vector values using array type "indexing syntax" brackets
+- If index out of range, program will panic an crash with error
+
+```rs
+let third: &i32 = &v[2];
+```
+
+- Second way: Access vector values using vector's "get" method
+- If index out of range, result will not have a value returning None
+- With get method code can test and use: `Some(&element)` or `None`
+
+```rs
+let third: Option<&i32> = v.get(2)
+```
+
+Some differences between array and vector.
+
+- Array size fixed at compile time, allocated on stack, vector allocated on heap.
+- Array size is fixed, vector can grow
+- Array is faster
+- Vector is more flexible
