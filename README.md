@@ -1248,3 +1248,25 @@ use std::io;
 // Shorter way, cmp and io both from std
 use std::{cmp::Ordering, io};
 ```
+
+## 7.5 Different Files
+
+- Only need to load a file using a mod declaration once in your module tree
+- mod is not an “include” operation
+
+- To find module hosting, compiler looks in:
+  - src/front_of_house/hosting.rs
+  - src/front_of_house/hosting/mod.rs (older style, still supported path)
+
+See 7.5-different-files/src/ for example code
+
+```txt
+   src/lib.rx
+
+   src/lib.rs
+   src/module1.rs
+
+   src/lib.rs
+   src/module1.rs
+   src/module1/module2.rs
+```
