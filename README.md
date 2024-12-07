@@ -16,8 +16,10 @@ myself with the vocabulary used to describe the build process and rust language.
 curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 ```
 
-- Installed vscode extension "rust-analyzer"
+- Installed vscode extension "rust-analyzer" (temporary disabled, popups distracting during tutorials)
 - Created an empty git repository (this repo) and cloned it.
+  - A new directory within this repo will be created for each chapter as a place to experiment with rust examples.
+  - This README.md will hold my learning notes in chronological order.
 - Created .gitignore with "\*target\*" to avoid commit binary executable files`
 - Begin at Chapter 1 section 1.1
 
@@ -1315,3 +1317,56 @@ Some differences between array and vector.
 - Array size is fixed, vector can grow
 - Array is faster
 - Vector is more flexible
+
+## 8.2 UTF-8 Strings
+
+- The "String" type is a growable, mutable, owned, UTF-8 encoded string type
+- Strings are implemented as a collection of bytes
+- The String type in standard library is complex due to UTF-8 international characters
+- String slices str, where `&str` refers to text stored elsewhere
+
+Example showing `Vec<T>` and `String` share some same operations (String implemented as wrapper around vector type)
+
+```rs
+    let mut s = String::new();
+    let s = "initial contents".to_string();
+    let s = String::from("initial contents");
+```
+
+### Modifying Strings
+
+- Various String methods append characters to end of string
+- The `push_str` method accepts a string slice without taking ownership `s.push_str("bar")`
+- The `push` method adds a single character to the end of a string
+- The "+" operator adds two string: adds &str to a String (String + &str)
+- At low level + is doing this: `fn add(self, s: &str) -> String {`
+- The + operator takes ownership over first parameter so the value is dropped after use
+- The second + parameter must be a reference
+- The compiler can coerce second parameter of type &String into different type &str.
+- The format! macro works returns a String similar to println! macro.
+
+```rs
+s.push_str("bar");
+s.push('l');
+let s3 = s1 + &s2; // note s1 can no longer be used
+let s = format!("{s1}-{s2}-{s3}");
+``` 
+
+### Slicing Strings
+
+
+- String slices must start and end at character boundary.
+- Use caution, string slices with ranges can crash your program.
+
+```rs
+let hello = "Здравствуйте";
+let s = &hello[0..4]; // s = Зд
+let s = &hello[0..1]; // Crash with runtime panic
+```
+
+### Iterating Strings
+
+```rs
+    for c in "Зд".chars() { 
+    for b in "Зд".bytes() {
+```
