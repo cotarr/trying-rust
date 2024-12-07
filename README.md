@@ -38,6 +38,7 @@ disable warnings to better focus on compiler error messages
 ```txt
 #[allow(unused_variables)]
 #[allow(dead_code)]
+#[allow(unused_mut)]
 ```
 
 ## 1.1 Hello World
@@ -1370,3 +1371,31 @@ let s = &hello[0..1]; // Crash with runtime panic
     for c in "Зд".chars() { 
     for b in "Зд".bytes() {
 ```
+
+## 8.3 Hash Maps
+
+- A HashMap is a collection of key value pairs, defined: `HashMap<K, V>`
+- Load from std library using `use std::collections::HashMap;`
+- Use "new" keyword to create a new HashMap
+- Use "insert" keyword to add key/value pairs
+- Use "entry" method to check if key exist and has value, add new, else ignores
+
+```rs
+let mut scores = HashMap::new();
+scores.insert(String::from("Blue"), 10);
+scores.entry(String::from("Blue")).or_insert(50);
+```
+
+- The get method returns an Option<&V>;
+- Option "copied" method gets an `Option<i32>`
+- The "unwrap_or" method sets sets a default value if there is no entry for the key.
+
+```rs
+    let score = scores.get(&team_name).copied().unwrap_or(0);
+```
+
+- Types implementing Copy trait, like i32, the values are copied into the hash map
+- Owned values like String, the values will be moved and hash map will be new owner
+
+Security Note: HashMap uses a hashing function called SipHash that can provide resistance to denial-of-service (DoS) attacks. SipHash is computationally slow. As alternative `hasher` is faster when security is not an issue.
+
