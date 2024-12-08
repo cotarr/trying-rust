@@ -1399,3 +1399,23 @@ scores.entry(String::from("Blue")).or_insert(50);
 
 Security Note: HashMap uses a hashing function called SipHash that can provide resistance to denial-of-service (DoS) attacks. SipHash is computationally slow. As alternative `hasher` is faster when security is not an issue.
 
+## 9.1 Unrecoverable errors, panic!
+
+- Unrecoverable error, two ways, fatal execution error, or calling "panic!" macro
+- By default, panics print message, unwind, clean up the stack, and quit.
+- "unwinding" is walking back the stack and cleans up the data from each function it encounters
+- "aborting" ends program without cleaning up, the operating system must handle memory
+
+- Cargo.toml entry to force panic to abort
+
+```txt
+[profile.release]
+panic = 'abort'
+```
+
+- To display stack, use RUST_BACKTRACE env variable as follows:
+
+```bash
+RUST_BACKTRACE=1 cargo run
+```
+
