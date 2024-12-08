@@ -1419,3 +1419,67 @@ panic = 'abort'
 RUST_BACKTRACE=1 cargo run
 ```
 
+## 9.2 Recoverable errors
+
+- Some functions have return type `Result<T, E>`
+  - T represents the type of the value that will be returned in a success case within the Ok varian
+  - E represents the type of the error that will be returned in a failure case within the Err variant
+  - For `File::open` type of E used in the error value is std::io::Error
+
+```rs
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+- Simplified example checking Result enum and match different errors (see src/main.rs)
+- Demo code in src/main.rs shows alternative using "if" statement as alternative to match
+
+```rs
+    let open_result = File::open("hello.txt");
+    let file_handle = match open_result {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => {
+                panic!("File not found");
+            },
+            other_error => {
+                panic!("Problem opening the file: {other_error:?}");
+            }
+        },
+    };
+```
+
+- Ok variant, unwrap will return the value inside the Ok
+- Err variant, unwrap will call the panic! macro.
+- Similar `unwrap_or_else` shown in demo code src/main.rs
+
+```rs
+    let greeting_file = File::open("hello.txt").unwrap();
+```
+
+- Propagating errors by returning a Result enum
+
+```rs
+    fn read_username_from_file() -> Result<String, io::Error> {
+        // ... some     code omitted ...
+        match username_file.read_to_string(&mut username) {
+            Ok(_) => Ok(username),
+            Err(e) => Err(e),
+        }
+    }
+```
+
+- Example using question mark operator "?" after a Result
+- If Result value Ok, value inside the Ok is returned, the program will continue.
+- If Result value Err, the Err will be returned from the whole function
+- The ? operator can only be used in functions whose return type is compatible.
+- Must be used with function returning Result, Option, or another type that implements FromResidual.
+
+```rs
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut username = String::new();
+    File::open("hello.txt")?.read_to_string(&mut username)?;
+    Ok(username)
+}```
