@@ -1482,4 +1482,15 @@ fn read_username_from_file() -> Result<String, io::Error> {
     let mut username = String::new();
     File::open("hello.txt")?.read_to_string(&mut username)?;
     Ok(username)
-}```
+}
+```
+
+## 9.3 To panic or not panic
+
+- If code is examples, prototype code, and tests, it’s more appropriate to write code that panics instead of returning a Result.
+- If a method call fails in a test, you’d want the whole test to fail, even if that method isn’t the functionality under test
+- The `unwrap` and `expect` methods are very handy when prototyping, before you’re ready to decide how to handle errors
+- It’s advisable to have your code panic when it’s possible that your code could end up in a bad state.
+  - something that is unexpected
+  - Your code after this point needs to rely on not being in this bad state
+  - There’s not a good way to encode this information in the types you use
