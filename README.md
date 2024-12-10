@@ -1494,3 +1494,64 @@ fn read_username_from_file() -> Result<String, io::Error> {
   - something that is unexpected
   - Your code after this point needs to rely on not being in this bad state
   - There’s not a good way to encode this information in the types you use
+
+## 10.1 Generic Data Type
+
+### Generics
+
+- Generics already used: Chapter 6 `Option<T>`, Chapter 8 `Vec<T>` and `HashMap<K, V>`, and Chapter 9 `Result<T, E>`
+- "generics" create definitions for items like function signatures or structs, used for different concrete data types.
+- Any identifier may be used as a type parameter name, by convention "T" is used.
+- Parameter names must be declared in a function's signature
+- Inside a function parameter names must be defined before use
+- Type name declarations goes inside angle brackets, <>, between function name and parameter list
+
+```rs
+    // Example: the function largest is generic over some type T
+    // It has one parameter named list, which is a slice of values of type T
+    // It will return a reference to a value of the same type T.
+
+    fn largest<T>(list: &[T]) -> &T {
+```
+
+- Example with struct
+- For different types, use different names like: `<T, U>`
+
+```rs
+    struct Point<T, U> {
+        x: T,
+        y: U,
+    }
+```
+
+- Example with enum, using Option and Result as examples
+
+```rs
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+- Example with method on a struct
+- Method named x on the `Point3<T>` struct that will return a reference to the x field of type T
+- Declare T after impl, T will specify implementing method on the type `Point3<T>`
+- Angle brackets in Point3 tells compiler it is a generic type rather than a concrete type
+
+```rs
+    struct Point3<T> {
+        x: T,
+        y: T,
+    }
+    impl<T> Point3<T> {
+        fn x(&self) -> &T {
+            &self.x
+        }
+    }
+```
+
